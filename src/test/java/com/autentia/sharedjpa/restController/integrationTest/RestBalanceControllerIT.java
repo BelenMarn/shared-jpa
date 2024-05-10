@@ -1,4 +1,4 @@
-package com.autentia.sharedjpa.restController.integrationTest.flywayContainer;
+package com.autentia.sharedjpa.restController.integrationTest;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.hasSize;
 @Testcontainers
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @TestPropertySource("/application-test.properties")
-public class RestBalanceControllerITflyway {
+public class RestBalanceControllerIT {
 
     @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")

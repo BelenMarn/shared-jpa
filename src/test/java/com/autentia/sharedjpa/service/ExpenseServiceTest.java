@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+
 public class ExpenseServiceTest {
     private final ExpenseRepository repository = mock(ExpenseRepository.class);
     private final FriendService friendService = mock(FriendService.class);

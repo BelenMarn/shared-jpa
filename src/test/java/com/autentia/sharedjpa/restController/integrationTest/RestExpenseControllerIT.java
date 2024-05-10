@@ -1,7 +1,6 @@
-package com.autentia.sharedjpa.restController.integrationTest.flywayContainer;
+package com.autentia.sharedjpa.restController.integrationTest;
 
-
-import com.autentia.sharedjpa.primaryAdapter.request.FriendRequest;
+import com.autentia.sharedjpa.primaryAdapter.request.ExpenseRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.flywaydb.core.Flyway;
@@ -17,7 +16,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 
@@ -25,14 +23,13 @@ import static org.hamcrest.Matchers.hasSize;
 @Testcontainers
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @TestPropertySource("/application-test.properties")
-public class RestFriendControllerITflyway {
+public class RestExpenseControllerIT {
 
     @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("simple_shared")
             .withUsername("root")
             .withPassword("root")
-            //.withInitScript()
             .withExposedPorts(3306);
 
     @DynamicPropertySource
@@ -50,81 +47,60 @@ public class RestFriendControllerITflyway {
 
     @Test
     @Order(1)
-    public void shouldGetAllFriendsAndReturnStatus200() {
+    public void shouldAddNewExpenseAndReturnStatus200(){
+        long id = 1;
 
         given()
                 .contentType(ContentType.JSON)
+                .pathParam("id", id)
+                .body(new ExpenseRequest(10.00, "test"))
                 .when()
-                .get("/rest/friend")
+                .post("/rest/expense/friend/{id}")
                 .then()
-                .statusCode(200)
-                .body(".", hasSize(4));
+                .statusCode(200);
     }
 
     @Test
     @Order(2)
-    public void shouldFindFriendByIdAndReturnStatus200() {
-
+    public void shouldGetAllExpensesAndReturnStatus200() {
         given()
                 .contentType(ContentType.JSON)
-                .pathParam("id", 4)
                 .when()
-                .get("/rest/friend/{id}")
+                .get("/rest/expense")
                 .then()
                 .statusCode(200)
-                .body("idFriend",equalTo(4))
-                .body("name",equalTo("Ismael"));
+                .body(".", hasSize(10));
     }
 
     @Test
     @Order(3)
-    public void shouldReturnFriendNotFoundExceptionWhenFriendNotFound() {
+    public void shouldReturnFriendNotFoundExceptionWhenAddingNewExpenseForFriend() {
+        ExpenseRequest expenseRequest = new ExpenseRequest(10.00, "test");
+        long id = 99;
 
         given()
                 .contentType(ContentType.JSON)
-                .pathParam("id", 90)
+                .pathParam("id", id)
+                .body(expenseRequest)
                 .when()
-                .get("/rest/friend/{id}")
+                .post("/rest/expense/friend/{id}")
                 .then()
                 .statusCode(404);
+
     }
 
     @Test
     @Order(4)
-    public void shouldUpdateFriendAndReturnStatus200(){
-        long id = 4;
-
-        given()
-                .pathParam("id", id)
-                .queryParam("name", "test")
-                .contentType(ContentType.JSON)
-                .when()
-                .put("/rest/friend/{id}")
-                .then()
-                .statusCode(200);
+    public void shouldReturnNegativeExpenseAmountExceptionWhenAmountIsNegative() {
+        long id = 1;
 
         given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", id)
+                .body(new ExpenseRequest(-10.00, "test"))
                 .when()
-                .get("/rest/friend/{id}")
+                .post("/rest/expense/friend/{id}")
                 .then()
-                .statusCode(200)
-                .body("name", equalTo("test"));
-    }
-
-    @Test
-    @Order(5)
-    public void
-    shouldSaveNewFriendAndReturnStatus200(){
-        String name = "test";
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(new FriendRequest(1, name))
-                .when()
-                .post("/rest/friend")
-                .then()
-                .statusCode(200);
+                .statusCode(400);
     }
 }

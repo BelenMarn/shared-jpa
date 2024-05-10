@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class BalanceServiceTest {
     private FriendRepository friendRepo = Mockito.mock(FriendRepository.class);
     private ExpenseRepository expenseRepo = Mockito.mock(ExpenseRepository.class);

@@ -13,6 +13,7 @@ import com.autentia.sharedjpa.primaryAdapter.respond.ExpenseResponse;
 import com.autentia.sharedjpa.primaryAdapter.restController.RestExpenseController;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 public class RestExpenseControllerTest {
     private final ExpenseService service = mock(ExpenseService.class);
     private final RestExpenseController sut = new RestExpenseController(service);

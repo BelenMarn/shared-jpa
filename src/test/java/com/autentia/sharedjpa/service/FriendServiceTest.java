@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
+
 public class FriendServiceTest {
     private final FriendRepository repository = Mockito.mock(FriendRepository.class);
     private final FriendService sut = new FriendService(repository);

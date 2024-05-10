@@ -11,6 +11,7 @@ import com.autentia.sharedjpa.primaryAdapter.restController.RestFriendController
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 public class RestFriendControllerTest {
 
     private final FriendService service = Mockito.mock(FriendService.class);

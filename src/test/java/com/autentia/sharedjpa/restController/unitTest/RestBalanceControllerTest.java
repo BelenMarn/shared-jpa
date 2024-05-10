@@ -10,6 +10,7 @@ import com.autentia.sharedjpa.primaryAdapter.respond.BalanceResponse;
 import com.autentia.sharedjpa.primaryAdapter.restController.RestBalanceController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SpringBootTest
 public class RestBalanceControllerTest {
     private final BalanceService service = mock(BalanceService.class);
     private final RestBalanceController sut = new RestBalanceController(service);
