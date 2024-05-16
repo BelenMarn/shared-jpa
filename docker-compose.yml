@@ -14,6 +14,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
   spring-app:
     build: .
