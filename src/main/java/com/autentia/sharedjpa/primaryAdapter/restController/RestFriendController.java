@@ -34,7 +34,7 @@ public class RestFriendController {
     }
 
     @GetMapping("/{id}")
-    public Friend findById(@PathVariable long id) throws EmptyFriendListException, FriendNotFoundException {
+    public Friend findById(@PathVariable long id) throws FriendNotFoundException {
         final Friend friend = friendService.findFriendById(id);
 
         if(friend != null){
