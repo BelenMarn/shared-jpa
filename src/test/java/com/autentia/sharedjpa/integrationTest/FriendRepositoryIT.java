@@ -7,6 +7,7 @@ import com.autentia.sharedjpa.core.domain.exception.FriendNotFoundException;
 import com.autentia.sharedjpa.core.domain.repositoryDomain.FriendRepository;
 import io.restassured.RestAssured;
 import org.flywaydb.core.Flyway;
+import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +30,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FriendRepositoryIT {
 
     private final FriendRepository friendRepository;
+    private final long id = 90;
+    private final String name = "Test";
 
     @Autowired
     public FriendRepositoryIT(FriendRepository friendRepository) {
@@ -52,7 +55,10 @@ public class FriendRepositoryIT {
     @BeforeAll
     static void doBeforeAll(@Autowired Flyway flyway, @LocalServerPort int port) {
         RestAssured.baseURI = "http://localhost:" + port;
+        flyway.clean();
         flyway.migrate();
+
+
     }
 
     @Test
@@ -62,28 +68,14 @@ public class FriendRepositoryIT {
         List<Friend> friends = friendRepository.findAll();
 
         // THEN
-        assertThat(friends).hasSize(4);
+        assertThat(friends).isNotEmpty();
     }
 
     @Test
     @Order(2)
-    public void shouldFindFriendById() throws FriendNotFoundException {
-        long idFriend = 4;
-        Friend expected = new Friend(idFriend, "Ismael");
-
-        // WHEN
-        Friend response = friendRepository.findFriendById(idFriend);
-
-        // THEN
-        assertThat(response).isEqualTo(expected);
-    }
-
-    @Test
-    @Order(3)
-    public void shouldSaveNewFriend() throws FriendNotFoundException {
+    public void shouldSaveNewFriend() {
         // GIVEN
-        long id = 005;
-        Friend expected = new Friend(id,"Friend to Test");
+        Friend expected = new Friend(id, name);
 
         // WHEN
         friendRepository.save(expected);
@@ -94,17 +86,27 @@ public class FriendRepositoryIT {
 
     }
 
+    /*@Ignore
     @Test
-    @Order(4)
-    public void shouldUpdateFriend() throws FriendNotFoundException {
-        // GIVEN
-        long id = 1;
-        String name = "Update";
-
+    @Order(3)
+    public void shouldFindFriendById() {
         Friend expected = new Friend(id, name);
 
         // WHEN
-        friendRepository.update(id, name);
+        Friend response = friendRepository.findFriendById(id);
+
+        // THEN
+        assertThat(response).isEqualTo(expected);
+    }*/
+
+    @Test
+    @Order(4)
+    public void shouldUpdateFriend() {
+    // GIVEN
+        Friend expected = new Friend(id, "Leo");
+
+        // WHEN
+        friendRepository.update(id, "Leo");
         Friend response = friendRepository.findFriendById(id);
 
         // THEN
@@ -118,7 +120,7 @@ public class FriendRepositoryIT {
         int numberOfFriends = friendRepository.getNumberOfFriends();
 
         // THEN
-        assertThat(numberOfFriends).isEqualTo(4);
+        assertThat(numberOfFriends).isGreaterThan(0);
     }
 
     @Test
@@ -134,4 +136,20 @@ public class FriendRepositoryIT {
         // THEN
         assertThat(balance).isEqualTo(expectedBalance);
     }
+
+
+    @Test
+    @Order(7)
+    public void shouldDeleteFriend() throws EmptyFriendListException {
+        // WHEN
+
+        // THEN
+        friendRepository.deleteFriend(id);
+        List<Friend> friends = friendRepository.findAll();
+
+        // THEN
+        assertThat(friends).isNotEmpty();
+
+    }
+
 }

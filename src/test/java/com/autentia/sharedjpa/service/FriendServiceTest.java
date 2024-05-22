@@ -103,4 +103,16 @@ public class FriendServiceTest {
         //THEN:
         Mockito.verify(repository, Mockito.times(1)).update(id, name);
     }
+
+    @Test
+    public void shouldDeleteFriend() {
+        //GIVEN:
+        long id =1;
+        String name = "Paco";
+
+        //WHEN:
+        sut.deleteFriend(id);
+        //THEN:
+        Mockito.verify(repository, Mockito.times(1)).deleteFriend(id);
+    }
 }

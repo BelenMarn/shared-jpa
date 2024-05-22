@@ -116,4 +116,17 @@ public class RestFriendControllerTest {
         Mockito.verify(service, Mockito.times(1)).updateFriend(id, name);
 
     }
+
+    @Test
+    public void shouldDeleteFriend(){
+        //GIVEN:
+        long id =1;
+
+        //WHEN:
+        sut.deleteFriend(id);
+
+        //THEN:
+        Mockito.verify(service, Mockito.times(1)).deleteFriend(id);
+
+    }
 }

@@ -53,7 +53,6 @@ public class RestFriendController {
 
     @PutMapping("/{id}")
     public void updateFriend(@PathVariable Long id, @RequestParam String name) {
-        final Friend friend = new Friend(id, name);
         friendService.updateFriend(id, name);
     }
 
@@ -69,5 +68,10 @@ public class RestFriendController {
                     friend.getIdFriend(),
                     friend.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteFriend(@PathVariable Long id) {
+        friendService.deleteFriend(id);
     }
 }
