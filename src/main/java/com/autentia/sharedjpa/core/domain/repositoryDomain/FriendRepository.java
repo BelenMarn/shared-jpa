@@ -14,4 +14,5 @@ public interface FriendRepository {
     Friend findFriendById(long idFriend);
     int getNumberOfFriends() throws EmptyExpenseListException;
     double getBalanceOfFriend(long id);
+    void deleteFriend(long idFriend);
 }

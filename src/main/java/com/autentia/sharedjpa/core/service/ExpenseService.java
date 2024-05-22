@@ -11,18 +11,16 @@ import com.autentia.sharedjpa.primaryAdapter.request.ExpenseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 @Service
 public class ExpenseService {
 
-    private FriendService friendService;
-    private ExpenseRepository expenseRepository;
+    private final FriendService friendService;
+    private final ExpenseRepository expenseRepository;
 
     @Autowired
     public ExpenseService(ExpenseRepository expenseRepository, FriendService friendService) {
@@ -44,6 +42,7 @@ public class ExpenseService {
 
         if(!expenses.isEmpty()){
             return expenses;
+
         }else{
             throw new EmptyExpenseListException("No expenses found");
         }
@@ -83,8 +82,7 @@ public class ExpenseService {
         long currentDate = System.currentTimeMillis();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(currentDate);
-        String formatedDate = dateFormat.format(date);
 
-        return formatedDate;
+        return dateFormat.format(date);
     }
 }

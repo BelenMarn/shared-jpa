@@ -61,4 +61,7 @@ public class FriendService {
         return new Date().getTime();
     }
 
+    public void deleteFriend(long id) {
+        friendRepo.deleteFriend(id);
+    }
 }

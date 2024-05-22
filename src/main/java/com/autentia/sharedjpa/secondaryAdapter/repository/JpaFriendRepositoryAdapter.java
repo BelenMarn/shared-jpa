@@ -67,4 +67,9 @@ public class JpaFriendRepositoryAdapter implements FriendRepository {
         List<ExpenseEntity> expenses = expenseRepository.findExpensesOfFriend(id);
         return expenses.stream().mapToDouble(ExpenseEntity::getAmount).sum();
     }
+
+    @Override
+    public void deleteFriend(long idFriend) {
+        jpaFriendRepository.deleteById(idFriend);
+    }
 }
