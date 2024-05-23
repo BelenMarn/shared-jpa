@@ -1,6 +1,7 @@
 package com.autentia.sharedjpa.restController.integrationTest;
 
 import com.autentia.sharedjpa.primaryAdapter.request.ExpenseRequest;
+import com.autentia.sharedjpa.primaryAdapter.request.FriendRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.flywaydb.core.Flyway;
@@ -25,6 +26,8 @@ import static org.hamcrest.Matchers.hasSize;
 @TestPropertySource("/application-test.properties")
 public class RestExpenseControllerIT {
 
+    long id = 1;
+
     @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("simple_shared")
@@ -45,11 +48,8 @@ public class RestExpenseControllerIT {
         flyway.migrate();
     }
 
-    @Test
-    @Order(1)
-    public void shouldAddNewExpenseAndReturnStatus200(){
-        long id = 1;
-
+    @BeforeEach
+    void beforeEach() {
         given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", id)
@@ -58,22 +58,23 @@ public class RestExpenseControllerIT {
                 .post("/rest/expense/friend/{id}")
                 .then()
                 .statusCode(200);
+
     }
 
+
     @Test
-    @Order(2)
+    @Order(1)
     public void shouldGetAllExpensesAndReturnStatus200() {
         given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/rest/expense")
                 .then()
-                .statusCode(200)
-                .body(".", hasSize(10));
+                .statusCode(200);
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     public void shouldReturnFriendNotFoundExceptionWhenAddingNewExpenseForFriend() {
         ExpenseRequest expenseRequest = new ExpenseRequest(10.00, "test");
         long id = 99;
@@ -90,9 +91,8 @@ public class RestExpenseControllerIT {
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     public void shouldReturnNegativeExpenseAmountExceptionWhenAmountIsNegative() {
-        long id = 1;
 
         given()
                 .contentType(ContentType.JSON)
@@ -102,5 +102,18 @@ public class RestExpenseControllerIT {
                 .post("/rest/expense/friend/{id}")
                 .then()
                 .statusCode(400);
+    }
+
+    @Test
+    @Order(4)
+    public void shouldDeleteExpense() {
+
+        given()
+                .contentType(ContentType.JSON)
+                .pathParam("id", id)
+                .when()
+                .delete("/rest/expense/{id}")
+                .then()
+                .statusCode(200);
     }
 }

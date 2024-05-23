@@ -56,4 +56,16 @@ public class RestExpenseControllerTest {
         Mockito.verify(service, times(1)).addExpense(1, expected);
     }
 
+    @Test
+    public void shouldDeleteExpense(){
+        //GIVEN:
+        ExpenseRequest result = new ExpenseRequest(50.00, "Train");
+
+        //WHEN:
+        sut.deleteExpense(1);
+        //THEN:
+        Mockito.verify(service, times(1)).deleteExpense(1);
+
+    }
+
 }

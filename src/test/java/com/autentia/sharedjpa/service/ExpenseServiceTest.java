@@ -11,7 +11,6 @@ import com.autentia.sharedjpa.core.domain.repositoryDomain.ExpenseRepository;
 import com.autentia.sharedjpa.core.service.ExpenseService;
 import com.autentia.sharedjpa.core.service.FriendService;
 import com.autentia.sharedjpa.primaryAdapter.request.ExpenseRequest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -50,7 +49,7 @@ public class ExpenseServiceTest {
     }
 
     @Test
-    public void shoulThrowExceptionWhenEmptyExpenses() throws EmptyExpenseListException, FriendNotFoundException {
+    public void shoulThrowExceptionWhenEmptyExpenses() throws EmptyExpenseListException {
         //GIVEN:
         List<Expense> training = new ArrayList<>();
         Mockito.when(repository.findExpenses()).thenReturn(training);
@@ -62,7 +61,7 @@ public class ExpenseServiceTest {
     }
 
     @Test
-    public void shouldAddExpense() throws EmptyFriendListException, FriendNotFoundException, NegativeExpenseAmountException {
+    public void shouldAddExpense() throws FriendNotFoundException, NegativeExpenseAmountException {
         //GIVEN:
         ExpenseRequest request = new ExpenseRequest(10.00, "Test");
         Friend friend = new Friend(1, "Juan");
@@ -87,5 +86,17 @@ public class ExpenseServiceTest {
         // THEN
         assertEquals("Amount must be positive", exception.getMessage());
 
+    }
+
+    @Test
+    public void shouldDeleteExpense() throws FriendNotFoundException {
+        //GIVEN:
+        long id = 1;
+
+        //WHEN:
+        sut.deleteExpense(id);
+
+        //THEN:
+        Mockito.verify(repository).deleteExpense(id);
     }
 }

@@ -70,4 +70,9 @@ public class JpaExpenseRepositoryAdapter implements ExpenseRepository {
         double roundedAverage = Math.round(average * 100.0) / 100.0;
         return roundedAverage;
     }
+
+    @Override
+    public void deleteExpense(long id) {
+        jpaExpenseRepository.deleteById(id);
+    }
 }

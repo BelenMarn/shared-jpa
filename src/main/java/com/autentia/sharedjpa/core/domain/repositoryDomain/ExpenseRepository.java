@@ -13,4 +13,5 @@ public interface ExpenseRepository {
     void addExpense(Expense expense) throws NegativeExpenseAmountException;
     List<ExpenseEntity> findExpensesOfFriend(long friendId);
     double getAverageSpending() throws EmptyExpenseListException;
+    void deleteExpense(long id);
 }

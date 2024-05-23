@@ -45,4 +45,9 @@ public class RestExpenseController {
                         expense.getExpenseDate()))
                 .collect(Collectors.toList());
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteExpense(@PathVariable long id) {
+        expenseService.deleteExpense(id);
+    }
 }
