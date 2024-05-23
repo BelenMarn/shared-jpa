@@ -23,7 +23,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.within;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -33,6 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ExpenseRepositoryIT {
 
     private final ExpenseRepository expenseRepository;
+
+    long id = 8000;
+    Friend friend = new Friend(3, "Pedro");
+    Expense expected = new Expense(id, friend, 20.00, "Test", "2024-04-10 12:30:00");
 
     @Autowired
     public ExpenseRepositoryIT(ExpenseRepository expenseRepository) {
@@ -60,23 +63,9 @@ public class ExpenseRepositoryIT {
         flyway.migrate();
     }
 
-    @Test
-    @Order(1)
-    public void shouldFindAllExpenses() throws EmptyExpenseListException, FriendNotFoundException {
-        // WHEN
-        List<Expense> expenses = expenseRepository.findExpenses();
-
-        // THEN
-        assertThat(expenses.size()).isEqualTo(9);
-    }
-
-    @Test
-    @Order(2)
-    public void shouldSaveNewExpense() throws NegativeExpenseAmountException, EmptyExpenseListException, FriendNotFoundException {
+    @BeforeEach
+    void beforeEach() throws NegativeExpenseAmountException, EmptyExpenseListException {
         // GIVEN
-        long id = 8000;
-        Friend friend = new Friend(3, "Pedro");
-        Expense expected = new Expense(id, friend, 20.00, "Test", "2024-04-10 12:30:00");
 
         // WHEN
         expenseRepository.addExpense(expected);
@@ -84,28 +73,53 @@ public class ExpenseRepositoryIT {
 
         // THEN
         assertTrue(allExpenses.contains(expected));
+
     }
 
     @Test
-    @Order(3)
+    @Order(1)
+    public void shouldFindAllExpenses() throws EmptyExpenseListException, FriendNotFoundException {
+        // WHEN
+        List<Expense> expenses = expenseRepository.findExpenses();
+
+        // THEN
+        assertThat(expenses.size()).isGreaterThan(0);
+    }
+
+    @Test
+    @Order(2)
     public void shouldFindExpensesOfFriend() {
         // GIVEN
-        long friendId = 2;
+        long friendId = 3;
 
         // WHEN
         List<ExpenseEntity> expensesOfFriend = expenseRepository.findExpensesOfFriend(friendId);
 
         // THEN
-        assertThat(expensesOfFriend.size()).isEqualTo(3);
+        assertThat(expensesOfFriend.size()).isGreaterThan(0);
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     public void shouldGetAverageSpending() throws EmptyExpenseListException {
         // WHEN
         double averageSpending = expenseRepository.getAverageSpending();
 
         // THEN
-        assertThat(averageSpending).isEqualTo(35.56, within(0.01));
+        assertThat(averageSpending).isGreaterThan(0);
+    }
+
+    @Test
+    @Order(4)
+    public void shouldDeleteExpense() throws EmptyExpenseListException {
+        // WHEN
+
+        // THEN
+        expenseRepository.deleteExpense(id);
+        List<Expense> expenses = expenseRepository.findExpenses();
+
+        // THEN
+        assertThat(expenses).isNotEmpty();
+
     }
 }

@@ -85,4 +85,10 @@ public class ExpenseService {
 
         return dateFormat.format(date);
     }
+
+
+    public void deleteExpense(long id) {
+        expenseRepository.deleteExpense(id);
+
+    }
 }
