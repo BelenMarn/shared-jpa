@@ -1,6 +1,7 @@
 package com.autentia.sharedjpa.restController.integrationTest;
 
 
+import com.autentia.sharedjpa.core.domain.Friend;
 import com.autentia.sharedjpa.primaryAdapter.request.FriendRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -21,6 +22,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 
@@ -52,6 +54,18 @@ public class RestFriendControllerIT {
     static void doBeforeAll(@Autowired Flyway flyway, @LocalServerPort int port) {
         RestAssured.baseURI = "http://localhost:" + port;
         flyway.migrate();
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(new FriendRequest(id, name))
+                .when()
+                .post("/rest/friend")
+                .then()
+                .statusCode(200);
+
     }
 
     @Test
@@ -96,37 +110,22 @@ public class RestFriendControllerIT {
 
     @Test
     @Order(4)
-    public void
-    shouldSaveNewFriendAndReturnStatus200(){
+    public void shouldUpdateFriendAndReturnStatus200(){
 
         given()
                 .contentType(ContentType.JSON)
-                .body(new FriendRequest(id, name))
-                .when()
-                .post("/rest/friend")
-                .then()
-                .statusCode(200);
-    }
-
-   /* @Ignore
-    @Test
-    @Order(5)
-    public void shouldUpdateFriendAndReturnStatus200(){
-        given()
                 .pathParam("id", id)
                 .queryParam("name", "test")
-                .contentType(ContentType.JSON)
                 .when()
                 .put("/rest/friend/{id}")
                 .then()
-                .statusCode(200)
-                .body("name", equalTo("test"));
+                .statusCode(200);
 
-    }*/
+    }
 
 
     @Test
-    @Order(6)
+    @Order(5)
     public void
     shouldDeleteFriendAndReturnStatus200(){
 

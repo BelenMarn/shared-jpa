@@ -57,7 +57,19 @@ public class FriendRepositoryIT {
         RestAssured.baseURI = "http://localhost:" + port;
         flyway.clean();
         flyway.migrate();
+    }
 
+    @BeforeEach
+    void beforeEach() {
+        // GIVEN
+        Friend expected = new Friend(id, name);
+
+        // WHEN
+        friendRepository.save(expected);
+        Friend response = friendRepository.findFriendById(id);
+
+        // THEN
+        assertThat(response).isEqualTo(expected);
 
     }
 
@@ -71,24 +83,9 @@ public class FriendRepositoryIT {
         assertThat(friends).isNotEmpty();
     }
 
+
     @Test
     @Order(2)
-    public void shouldSaveNewFriend() {
-        // GIVEN
-        Friend expected = new Friend(id, name);
-
-        // WHEN
-        friendRepository.save(expected);
-        Friend response = friendRepository.findFriendById(id);
-
-        // THEN
-        assertThat(response).isEqualTo(expected);
-
-    }
-
-    /*@Ignore
-    @Test
-    @Order(3)
     public void shouldFindFriendById() {
         Friend expected = new Friend(id, name);
 
@@ -97,10 +94,10 @@ public class FriendRepositoryIT {
 
         // THEN
         assertThat(response).isEqualTo(expected);
-    }*/
+    }
 
     @Test
-    @Order(4)
+    @Order(3)
     public void shouldUpdateFriend() {
     // GIVEN
         Friend expected = new Friend(id, "Leo");
@@ -114,7 +111,7 @@ public class FriendRepositoryIT {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     public void shouldGetNumberOfFriends() throws EmptyExpenseListException {
         // WHEN
         int numberOfFriends = friendRepository.getNumberOfFriends();
@@ -124,7 +121,7 @@ public class FriendRepositoryIT {
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     public void shouldGetBalanceOfFriend() {
         // GIVEN
         long friendId = 2;
@@ -139,7 +136,7 @@ public class FriendRepositoryIT {
 
 
     @Test
-    @Order(7)
+    @Order(6)
     public void shouldDeleteFriend() throws EmptyFriendListException {
         // WHEN
 

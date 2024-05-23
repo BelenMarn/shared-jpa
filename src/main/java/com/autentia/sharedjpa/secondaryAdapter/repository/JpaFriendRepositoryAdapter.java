@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @Primary
 public class JpaFriendRepositoryAdapter implements FriendRepository {
 
-    private JpaFriendRepository jpaFriendRepository;
-    private ExpenseRepository expenseRepository;
+    private final JpaFriendRepository jpaFriendRepository;
+    private final ExpenseRepository expenseRepository;
 
     @Autowired
     public JpaFriendRepositoryAdapter(JpaFriendRepository jpaFriendRepository, ExpenseRepository expenseRepository) {
