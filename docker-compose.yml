@@ -8,12 +8,14 @@ services:
       MYSQL_DATABASE: simple_shared
     ports:
       - 3306:3306
+    networks:
+      - appnet
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root"]
-      interval: 10s
+      test: [ "CMD", "mysqladmin", "ping", "-p$$MYSQL_ROOT_PASSWORD","--protocol","tcp" ]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 20
     volumes:
       - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
@@ -21,10 +23,15 @@ services:
     build: .
     ports:
       - 8080:8080
-    depends_on:
-      mysql:
-        condition: service_healthy
+    networks:
+      - appnet
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/simple_shared
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      mysql:
+        condition: service_healthy
+networks:
+  appnet: {}
+
